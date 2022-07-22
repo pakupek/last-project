@@ -1,12 +1,10 @@
-from flask import render_template, Flask
+from flask import render_template
+from blog import app
+from blog.models import Entry
 
-app = Flask(__name__)
 
 #Route leading into homepage
 @app.route('/')
 def homepage():
-    return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    all_posts = Entry.query.all()
+    return render_template('homepage.html', all_posts_=all_posts)
