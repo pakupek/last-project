@@ -1,11 +1,18 @@
 {% extends "index.html" %}
 {% block content %} 
-
-{% for post in all_posts %}
+<style>
+    .glyphicon{
+        color: blueviolet;
+        margin-left: 150px;
+        font-size: 20px;
+        float: right;
+    }
+</style>
+{% for posts in posts %}
     <div>
-        <h2>{{ post.title}}</h2>
-        <p>{{ post.pub_date.strftime('%Y-%m-%d') }}</p>
-        <p>{{ post.body}}</p>
+        <h2>{{ posts.title }} <i class="glyphicon glyphicon-pencil"></i></h2>
+        <p>{{ posts.pub_date.strftime('%Y-%m-%d') }}</p>
+        <p>{{ posts.body }}</p>
     </div>
 {% endfor %}
 {% endblock %}
