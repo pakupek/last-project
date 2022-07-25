@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect
 from blog import app
 from blog.forms import EntryForm
 from blog.models import Entry, db
@@ -6,7 +6,7 @@ from blog.models import Entry, db
 #Route leading into homepage
 @app.route('/')
 def homepage():
-    posts = Entry.query.all()
+    posts = Entry.query.filter_by(is_published=True).order_by(Entry.pub_date.desc())
     return render_template('homepage.html', posts=posts)
 
 #Route for adding posts
@@ -28,7 +28,7 @@ def create_entry():
     return render_template('entry_form.html', form=form, errors=errors)
 
 @app.route('/editpost/<int:entry_id>', methods=["GET", "POST"])
-def edit_post(entry_id):
+def edit_entry(entry_id):
     entry = Entry.query.filter_by(id=entry_id).first_or_404()
     form = EntryForm(obj=entry)
     errors = None
@@ -36,6 +36,8 @@ def edit_post(entry_id):
         if form.validate_on_submit():
             form.populate_obj(entry)
             db.session.commit()
+            return redirect('homepage.html')
         else:
             errors = form.errors
     return render_template("entry_form.html", form=form, errors=errors)
+    
